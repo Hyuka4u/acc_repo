@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Untukmu, Sayang ❤️</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #feffe9;    
+      --accent: #b4dc87;  
+      --accent-2: #e6f6d6; 
+      --card: #ffffff;
+      --muted: #556655;    
+      --muted-soft: #6b7a66;
+      --accent-contrast: #2e5b2a;
+      --glass: rgba(255,255,255,0.85);
+    }
+    html,body{height:100%;}
+    body{
+      background: var(--bg);
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: #223322;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .login-overlay{
+      position:fixed; inset:0;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(4px);
+      display:flex; align-items:center; justify-content:center;
+      z-index:1050;
+      transition:opacity .35s ease, visibility .35s;
+    }
+    .login-card{
+      width:clamp(300px, 78%, 520px);
+      border-radius:18px;
+      box-shadow: 0 10px 30px rgba(46,91,42,0.06);
+      padding:28px;
+      background: var(--glass);
+      text-align:center;
+    }
+    .logo-heart{
+      width:78px; height:78px; display:inline-grid; place-items:center;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      border-radius:18px;
+      font-family:"Dancing Script", cursive;
+      font-size:34px; color:var(--accent-contrast);
+      box-shadow: 0 6px 18px rgba(46,91,42,0.08);
+      margin-bottom:12px;
+    }
+    .muted-small{color:var(--muted); font-size:14px}
+
+    .hero{
+      padding:70px 0 40px;
+      text-align:center;
+    }
+    .hero h1{
+      font-family:"Dancing Script", cursive;
+      font-size:48px;
+      margin-bottom:6px;
+      color:var(--accent-contrast);
+      animation: fadeInSlide 1s ease-out;
+    }
+    .hero p.lead{
+      color:var(--muted);
+      margin-bottom:24px;
+      font-size:18px;
+      animation: fadeInSlide 1s ease-out 0.3s forwards;
+      opacity: 0;
+    }
+
+    .card-rose{
+      background: var(--card);
+      border-radius:16px;
+      padding:18px;
+      box-shadow: 0 8px 20px rgba(46,91,42,0.04);
+      border: 1px solid rgba(46,91,42,0.04);
+      overflow: visible; /* penting: jangan memotong proposalContent */
+    }
+
+    .profiles-grid { display:flex; gap:18px; align-items:stretch; margin-top:18px; }
+    @media (max-width:768px){ .profiles-grid { flex-direction:column; } }
+
+    .flip-card { perspective: 1100px; flex:1; min-width:0; }
+    .flip-card[tabindex] { outline: none; }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      transition: transform 0.6s cubic-bezier(.2,.9,.2,1);
+      transform-style: preserve-3d;
+      transform-origin: center center;
+      cursor: pointer;
+      height: 140px;
+      border-radius:12px;
+    }
+    .flip-card.show-back .flip-card-inner { transform: rotateY(180deg); }
+
+    .flip-card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 12px;
+      overflow: hidden;
+      display:flex;
+      align-items:center;
+      padding:14px;
+      box-shadow:0 8px 20px rgba(46,91,42,0.03);
+      background: var(--card);
+      border:1px solid rgba(46,91,42,0.03);
+    }
+    .flip-card-front { z-index:2; }
+    .flip-card-back { transform: rotateY(180deg); display:flex; align-items:center; justify-content:center; text-align:center; padding:18px; color:var(--accent-contrast); background: linear-gradient(180deg, rgba(180,220,135,0.06), rgba(180,220,135,0.02)); }
+    .back-message { font-size:15px; line-height:1.45; color:#25401f; padding:6px 8px; max-height:100px; overflow:auto; }
+
+    .profile-avatar {
+      width:84px;
+      height:84px;
+      border-radius:12px;
+      object-fit:cover;
+      flex-shrink:0;
+      box-shadow: 0 6px 18px rgba(46,91,42,0.04);
+      margin-right:12px;
+    }
+    .profile-name { font-weight:700; margin:0; color:var(--accent-contrast); font-size:18px; }
+    .profile-desc { color:var(--muted); font-size:13px; margin:0; }
+    .profile-meta { margin-top:8px; font-size:13px; color:#8a8a7a; }
+
+    /* PROPOSAL content visibility classes (fixed) */
+    #proposalContent { display:none; opacity:0; transition: opacity .36s ease; }
+    #proposalContent.show { display:block; opacity:1; }
+
+    .carousel .carousel-inner { border-radius:12px; overflow:hidden; }
+
+    .img-thumb{ 
+      border-radius:12px; 
+      object-fit:cover; 
+      height:160px; 
+      width:100%; 
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+      box-shadow: 0 6px 18px rgba(46,91,42,0.04);
+    }
+    .img-thumb:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 30px rgba(46,91,42,0.08);
+    }
+
+    .navbar {
+      background: rgba(255,255,255,0.9);
+      border-bottom: 1px solid rgba(46,91,42,0.03);
+    }
+
+    footer { padding:28px 0; text-align:center; color:var(--muted); }
+
+    .floating-heart{
+      position:fixed; right:18px; bottom:18px; z-index:1000;
+      width:56px; height:56px; border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--accent),#e0f3c9);
+      box-shadow: 0 8px 26px rgba(46,91,42,0.12);
+      cursor:pointer;
+      animation: heartBeat 1.5s infinite alternate; 
+    }
+    .dancing{
+      font-family:"Dancing Script",cursive;
+      font-size:20px;
+      color:var(--accent-contrast);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg,var(--accent), var(--accent-2));
+      border: none;
+      color: var(--accent-contrast);
+      font-weight:600;
+      box-shadow: 0 6px 18px rgba(46,91,42,0.06);
+    }
+    .btn-outline-primary {
+      color: var(--accent-contrast);
+      border-color: rgba(46,91,42,0.12);
+      background:transparent;
+    }
+    .btn-success {
+      background: linear-gradient(90deg,#9fc76b, var(--accent));
+      border: none;
+      color: #083009;
+    }
+    .btn-warning {
+      background: linear-gradient(90deg,#ffd27a, #ffea9e);
+      color:#6b4b00;
+    }
+
+    @media (max-width:576px){
+      .hero h1{font-size:36px;}
+      .profile-avatar { width:68px; height:68px; margin-right:10px; }
+      .flip-card-inner { height:120px; }
+      .back-message { font-size:14px; }
+    }
+
+    .hidden{display:none !important; visibility:hidden !important; opacity:0 !important;}
+  </style>
+</head>
+<body>
+
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <div class="logo-heart">♡</div>
+      <h4 style="margin-bottom:6px;">Halo, sayang 💕</h4>
+      <p class="muted-small">Masukin sesuatu yang paling kita suka — jangan lupa ya :)</p>
+
+      <div class="mt-3">
+        <div class="input-group mb-2">
+          <span class="input-group-text">🔒</span>
+          <input id="passwordInput" type="password" class="form-control" placeholder="Masukkan panggilan kesayangan">
+        </div>
+        <div>
+          <button id="loginBtn" class="btn btn-primary w-100">Masuk</button>
+        </div>
+        <div id="loginMsg" class="mt-3 muted-small text-danger" style="min-height:20px"></div>
+      </div>
+
+      <div class="mt-3 muted-small">Tip: kata kunci yang kutetapkan adalah <strong>"Suatu minuman Hijau yang membuat kita bersatu"</strong></div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <div style="width:42px;height:42px;border-radius:9px;background:linear-gradient(135deg,var(--accent-2),var(--accent));display:grid;place-items:center;font-family:'Dancing Script';color:var(--accent-contrast);">M</div>
+        <div>
+          <div style="font-weight:600;color:var(--accent-contrast)">Untukmu Caca</div>
+          <small style="font-size:11px;color:var(--muted)">Sebuah pesan dari hatiku hanya untukmu</small>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kenangan">Kenangan</a></li>
+          <li class="nav-item"><a class="nav-link" href="#pesan">Pesan (Proposal)</a></li>
+          <li class="nav-item"><a class="nav-link" href="#galeri">Galeri</a></li>
+          <li class="nav-item"><a class="nav-link" href="#musik">Musik</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Untukmu, sayang...</h1>
+      <p class="lead">We can go somewhere, just you and I. We could watch the waves roll by. But I'm too shy to ask you if you'd want to. But I guess that i could try to tell you how I'm feeling.</p>
+      
+      <div id="countdownTimer" class="mt-4">
+        <div class="card-rose p-3 d-inline-block" style="background:var(--card); color:var(--accent-contrast); font-weight:600; font-size:18px;">
+          Kita sudah bersama selama: <span id="daysTogether" class="dancing" style="font-size:24px; color:var(--accent-contrast);">...</span> Hari!
+        </div>
+      </div>
+
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+          <div class="card-rose">
+            <p style="font-size:16px; color:var(--muted)">
+              Kalau kau sudah masuk ke sini, itu artinya aku berani membuka hati. Selamat datang, semoga tiap kata membuatmu tersenyum.
+            </p>
+            <div class="mt-3 d-flex gap-2 justify-content-center">
+              <a href="#pesan" class="btn btn-outline-primary">Baca Pesanku</a>
+              <a href="#kenangan" class="btn btn-primary">Lihat Kenangan</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= -->
+  <!-- PROFILES: FLIP CARDS (Edit removed) -->
+  <!-- ========================= -->
+  <section id="profiles" class="py-4">
+    <div class="container">
+      <div class="profiles-grid">
+        <!-- PROFILE 1 -->
+        <div class="flip-card" id="flip-1" tabindex="0" role="button" aria-pressed="false" aria-label="Profil saya, tekan Enter atau klik untuk membalik">
+          <div class="flip-card-inner">
+            <!-- front -->
+            <div class="flip-card-face flip-card-front">
+              <img id="avatar-1" src="foto/ndre.jpg" alt="Foto Aku" class="profile-avatar" />
+              <div style="flex:1;">
+                <h5 class="profile-name" id="name-1">Andre Maulana J</h5>
+                <p class="profile-desc" id="desc-1">Orang yang tadinya ingin hidup sendiri — Matcha • Penyayang • Suka Musik</p>
+                <div class="profile-meta" id="meta-1"><small class="text-muted">Kesayangan Aca</small></div>
+              </div>
+            </div>
+
+            <!-- back -->
+            <div class="flip-card-face flip-card-back">
+              <div class="back-message" id="back-1">Halo acaaa terimakasih karena udah masuk ke dalam hidupku, bukti dari kamu masuk ke dalam hidupku ya sesimple kamu yang kepo dan membalikkan kartu ini heheh.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFILE 2 -->
+        <div class="flip-card" id="flip-2" tabindex="0" role="button" aria-pressed="false" aria-label="Profil dia, tekan Enter atau klik untuk membalik">
+          <div class="flip-card-inner">
+            <!-- front -->
+            <div class="flip-card-face flip-card-front">
+              <img id="avatar-2" src="foto/aca2.png" alt="Foto Dia" class="profile-avatar" />
+              <div style="flex:1;">
+                <h5 class="profile-name" id="name-2">Tasya Nurmaliya</h5>
+                <p class="profile-desc" id="desc-2">Orang yang suka Matcha tapi kenapa jadi suka sama Andre MJ — Matcha • Senyum yang menenangkan • Si Ngambek </p>
+                <div class="profile-meta" id="meta-2"><small class="text-muted">Manusia berharga untuk Andre MJ💫</small></div>
+              </div>
+            </div>
+
+            <!-- back -->
+            <div class="flip-card-face flip-card-back">
+              <div class="back-message" id="back-2">Ini pesan dari Andre MJ... Acaaa kenapa kamu bisa sesempurna itu buat aku deh? walaupun kamu sering gak percaya diri dan takut kalo aku bakalan pergi, tapi asal kamu tau yaa aku tuh sayang banget sama kamu lohhh, masa iya mau ninggalin kamu tch.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-hint mt-2" style="text-align:center; color:#7a7a6f; font-size:13px;">Bisa di apain lagi yaa cardnya?</div>
+    </div>
+  </section>
+
+  <!-- about, memories, pesan, galeri, musik, pelukan (tidak berubah) -->
+  <section id="about" class="py-5">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-md-6">
+          <img src="foto/aca1.png" class="img-fluid rounded-4" alt="loving moment">
+        </div>
+        <div class="col-md-6">
+          <h3 style="font-family:'Dancing Script',cursive; color:var(--accent-contrast)">Kenapa aku sayang kamu</h3>
+          <p class="muted-small">Karena sabarmu, senyummu, dan caramu membuat hari-hariku lebih ringan. Kamu bukan cuma pelipur lelah — kamu alasan aku mau jadi lebih baik.</p>
+          <ul class="list-unstyled mt-3">
+            <li>• Selalu sabar denganku</li>
+            <li>• Cerita kecil yang berarti</li>
+            <li>• Setiap jawaban yang kau beri</li>
+            <li>• Ajakan yang selalu ada tiap hari</li>
+            <li>• Muka lucumu di setiap vidio call kita</li>
+            <li>• Selalu jadi yang pertama kuingat tiap pagi</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kenangan" class="py-5">
+    <div class="container">
+      <h4 class="mb-3">Kenangan Kita</h4>
+      <div id="memoriesCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner rounded-4 overflow-hidden" style="box-shadow:0 10px 30px rgba(46,91,42,0.04);">
+          <div class="carousel-item active">
+            <img src="foto/kita1.png" class="d-block w-100" style="height:420px; object-fit:cover;">
+          </div>
+          <div class="carousel-item">
+            <img src="foto/kita2.png" class="d-block w-100" style="height:420px; object-fit:cover;">
+          </div>
+          <div class="carousel-item">
+            <img src="foto/kita3.png" class="d-block w-100" style="height:420px; object-fit:cover;">
+          </div>
+          <div class="carousel-item">
+            <img src="foto/kita4.png" class="d-block w-100" style="height:420px; object-fit:cover;">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#memoriesCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#memoriesCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="pesan" class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card-rose">
+            <h3 style="font-family:'Dancing Script',cursive;color:var(--accent-contrast)">Ada yang ingin ku bilang...</h3>
+            <p style="font-size:18px; color:var(--accent-contrast)">
+              Aku punya pesan rahasia, tapi kamu harus berani membukanya.
+            </p>
+
+            <div class="mt-4 text-center">
+              <!-- TOMBOL DIUBAH: sekarang pakai palette matcha -->
+              <button class="btn btn-lg btn-primary" id="openProposalBtn" style="min-width:250px; background: linear-gradient(90deg,var(--accent), var(--accent-2)); border:none;">Buka Pesan Hatiku 💌</button>
+            </div>
+
+            <div id="proposalContent" class="mt-3" aria-live="polite">
+              <p style="font-size:16px; color:var(--accent-contrast);">
+                Udah 4 bulan kita bersama ya caa? Dan hari ini mungkin adalah hari yang special buat aku dan buat kamu(mungkin yah :3) karena pada akhirnya aku udah siap buat memintamu untuk menjadi pacarku
+                di tanggal 17 ini dan di hari Senin ini, apakah kamu mau jadi pacar aku dan selalu bersama bareng aku sampe kapan pun itu? sayangg??
+              </p>
+
+              <p style="background:var(--card); padding:18px; border-radius:12px; box-shadow:0 6px 12px rgba(46,91,42,0.03); border-left:4px solid var(--accent-contrast);">
+                Sayang, sejak pertama kali kita ngobrol itu kalo gak salah yang pas photoshoot itu kan yah? pas kita bercanda soal kabel data ato tripod itu, sebenarnya aku tuh seneng banget tauuu, entah kenapa ya aku bisa seseneng itu, makannya aku mau nemenin kamu ngambil tas ke atas heheheh<br><br>
+                Terus setelah rapat, entah rapat apa itu aku lupa, kita tuh sempet ngobrol juga berdua di bawah juanda kan? kamu mau konsol katanya soalan tune warna dari photoshoot itu kan yaa wkwkwk modus ajah kamu mah, pas waktu itu juga aku seneng sebenarnya tapi aku juga malu makannya aku nyari alesan biar cepet nyusul gol nopal hamndan pokoknya kelas B makan geprek wkwkkwkw, dan pas sampe situ ya aku di ceng cengin lahh pasti wkwkwk aku seneng banget sih<br><br>
+                Ya pas di bandung juga aku seneng bisa ngebonceng kamu dari crb sampe bdg dan balik lagi, aku juga seneng banget pas kamu waktu itu ngepangku aku di kasur pas aku belum mandi wkkwkwkw, gatau deh waktu itu aku seneng banget cuma yaaa aku masih nyembunyiin hehwehwhew. dah ah kebanyakan ntar ini isinya hehehe<br><br>
+              
+                Sayanggg Aku mau kamu tau kalo aku tuh bener bener serius sama kamu, jangan pernah mikir kalo aku tuh gak serius yaa? jangan pernah mikir kalo aku bakal bosen ato apa yaa? kita kan udah ngomongin itu di awal, kalo aku/kamu bosen kita harus gimana iyakann?? semoga kita bisa selesain masalah entah apapun ituu dan jangan sampe kita pisah karena aku gamau hal hal pahit itu terulang lagi di hidupku, dan kamu juga gamauu kayak gitu kann sayang???.
+                Jadiiii sayangggg Maukah kau **menjadi satu-satunya yang kusayang — bukan hanya hari ini, tapi selalu dan selamanyaaa?? mau kannn? ❤️💚🤍**
+              </p>
+
+              <div class="mt-4 d-flex gap-3 justify-content-center">
+                <button class="btn btn-success btn-lg" id="acceptBtn">Ayoo sayangg 💍</button>
+                <button class="btn btn-outline-secondary btn-lg" id="maybeBtn">Beri aku waktu 🙏</button>
+              </div>
+
+              <div class="mt-3 d-flex justify-content-center gap-2">
+                <button id="closeProposalBtn" class="btn btn-sm btn-outline-primary">Tutup</button>
+              </div>
+
+              <div id="respMsg" class="mt-3 muted-small" style="min-height:20px;"></div>
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="galeri" class="py-5">
+    <div class="container">
+      <h4 class="mb-3">Galeri (Klik foto untuk memperbesar)</h4>
+      <div class="row g-3">
+        <div class="col-6 col-md-3"><img class="img-thumb" src="foto/hal1.png" alt="Kenangan 1"></div>
+        <div class="col-6 col-md-3"><img class="img-thumb" src="foto/hal2.png" alt="Kenangan 2"></div>
+        <div class="col-6 col-md-3"><img class="img-thumb" src="foto/hal3.png" alt="Kenangan 3"></div>
+        <div class="col-6 col-md-3"><img class="img-thumb" src="foto/hal4.png" alt="Kenangan 4"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== MUSIC SECTION: playlist interaktif (DIUBAH) ====== -->
+  <section id="musik" class="py-5">
+    <div class="container">
+      <h4 class="mb-3">Lagu Kita</h4>
+      <div class="card-rose">
+        <p class="muted-small">Pilih lagu dari playlist di samping, atau tekan play untuk melanjutkan otomatis.</p>
+
+        <style>
+          .player-wrap { display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; }
+          .player-main { flex:1 1 420px; min-width:280px; }
+          .player-controls { display:flex; gap:10px; align-items:center; margin-top:10px; }
+          .play-btn { width:44px; height:44px; border-radius:10px; display:grid; place-items:center; font-weight:700;
+            background: linear-gradient(180deg,#b4dc87,#e6f6d6); color:#1f3f1a; border:none; box-shadow:0 8px 20px rgba(46,91,42,0.08); cursor:pointer; }
+          .small-btn { background:transparent; border:1px solid rgba(46,91,42,0.08); border-radius:10px; padding:8px 10px; cursor:pointer; color:var(--accent-contrast); }
+          .track-info { font-weight:700; color:var(--accent-contrast); }
+          .track-sub { color:var(--muted); font-size:13px; margin-top:4px; }
+          .progress-wrap { margin-top:12px; width:100%; display:flex; gap:10px; align-items:center; }
+          .progress-time { font-size:13px; color:var(--muted); min-width:48px; text-align:center; }
+          .progress-bar { -webkit-appearance: none; appearance:none; height:8px; border-radius:8px; background:rgba(46,91,42,0.08); width:100%; cursor:pointer; outline:none; }
+          .progress-bar::-webkit-slider-thumb { -webkit-appearance:none; width:14px;height:14px;border-radius:50%; background:#1f3f1a; box-shadow:0 2px 6px rgba(0,0,0,0.12); }
+          .playlist { width:320px; max-width:38%; min-width:220px; background:linear-gradient(180deg, rgba(230,246,214,0.6), rgba(230,246,214,0.3)); border-radius:12px; padding:12px; box-shadow: 0 8px 24px rgba(46,91,42,0.04); }
+          .playlist h6 { margin:0 0 8px 0; color:var(--accent-contrast); font-weight:700; }
+          .track-item { display:flex; gap:10px; align-items:center; padding:8px; border-radius:10px; cursor:pointer; transition: background .18s ease, transform .12s ease; }
+          .track-item:hover { background: rgba(255,255,255,0.6); transform: translateY(-2px); }
+          .track-item.active { background: linear-gradient(90deg, rgba(180,220,135,0.15), rgba(180,220,135,0.05)); border-left:4px solid var(--accent); }
+          .track-thumb { width:48px;height:48px;border-radius:8px; object-fit:cover; flex-shrink:0; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+          .track-meta { display:flex; flex-direction:column; min-width:0; }
+          .track-title { font-weight:600; color:var(--accent-contrast); font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+          .track-artist { color:var(--muted); font-size:13px; }
+          @media (max-width:900px) { .player-wrap { flex-direction:column; } .playlist { width:100%; max-width:100%; } }
+
+          /* volume small style */
+          .vol-wrap { display:flex; align-items:center; gap:8px; padding-left:6px; }
+          #volume { width:110px; accent-color: #2e5b2a; }
+          .mute-icon { font-size:14px; }
+        </style>
+
+        <div class="player-wrap">
+          <!-- main player -->
+          <div class="player-main">
+            <div class="track-info" id="nowTitle">- Pilih lagu untuk mulai -</div>
+            <div class="track-sub" id="nowArtist">Playlist personal</div>
+
+            <div class="player-controls mt-3">
+              <button id="prevBtn" class="small-btn" title="Previous">⏮</button>
+              <button id="playPauseBtn" class="play-btn" title="Play / Pause">▶</button>
+              <button id="nextBtn" class="small-btn" title="Next">⏭</button>
+
+              <div style="flex:1"></div>
+
+              <button id="loopBtn" class="small-btn" title="Loop: Off">Loop</button>
+              <button id="shuffleBtn" class="small-btn" title="Shuffle: Off">Shuffle</button>
+
+              <!-- volume control -->
+              <div class="vol-wrap" style="margin-left:6px;">
+                <button id="muteBtn" class="small-btn" title="Mute">🔊</button>
+                <input id="volume" type="range" min="0" max="100" value="80" aria-label="volume">
+              </div>
+            </div>
+
+            <div class="progress-wrap">
+              <div class="progress-time" id="curTime">0:00</div>
+              <input id="progress" class="progress-bar" type="range" min="0" max="100" value="0">
+              <div class="progress-time" id="durTime">0:00</div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <audio id="player" preload="metadata"></audio>
+            </div>
+          </div>
+
+          <!-- playlist -->
+          <div class="playlist" id="playlist">
+            <h6>Playlist</h6>
+            <!-- items injected by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // === Playlist: sesuaikan src bila nama file berbeda di folder 'musik/' ===
+      const playlist = [
+        { title: "everything u are", artist: "Hindia", src: "musik/everything u are - Hindia.mp3", cover: "foto/everyth.jpg" },
+        { title: "Jiwa Yang Bersedih", artist: "Ghea Indrawari", src: "musik/Jiwa Yang Bersedih - Ghea Indrawari.mp3", cover: "foto/jiwayangb.jpg" },
+        { title: "Malaikat", artist: "Ghea Indrawari", src: "musik/Malaikat - Ghea Indrawari.mp3", cover: "foto/malaikatku.jpg" },
+        { title: "Monolog", artist: "Pamungkas", src: "musik/Monolog - Pamungkas.mp3", cover: "foto/monologg.jpg" },
+        { title: "Tarot", artist: ".Feast", src: "musik/Tarot - .Feast.mp3", cover: "foto/tarottw.jpg" },
+        { title: "Terima Kasih Sudah Bertahan", artist: "Ghea Indrawari", src: "musik/Terima Kasih Sudah Bertahan - Ghea Indrawari.mp3", cover: "foto/terimakasihku.jpg" }
+      ];
+      // ===================================================================
+
+      // DOM refs
+      const player = document.getElementById('player');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const loopBtn = document.getElementById('loopBtn');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+      const nowTitle = document.getElementById('nowTitle');
+      const nowArtist = document.getElementById('nowArtist');
+      const progress = document.getElementById('progress');
+      const curTime = document.getElementById('curTime');
+      const durTime = document.getElementById('durTime');
+      const playlistEl = document.getElementById('playlist');
+
+      // volume refs
+      const volumeEl = document.getElementById('volume');
+      const muteBtn = document.getElementById('muteBtn');
+
+      let currentIndex = 0;
+      let isPlaying = false;
+      let isLoop = false;
+      let isShuffle = false;
+      let shuffledOrder = [...Array(playlist.length).keys()];
+      let lastVolume = Number(volumeEl.value) / 100;
+
+      // set initial volume
+      player.volume = lastVolume;
+
+      function renderPlaylist(){
+        playlistEl.innerHTML = '<h6>Playlist</h6>';
+        playlist.forEach((t, i) => {
+          const item = document.createElement('div');
+          item.className = 'track-item';
+          item.dataset.index = i;
+          item.innerHTML = `
+            <img class="track-thumb" src="${t.cover || ''}" alt="${t.title}">
+            <div class="track-meta">
+              <div class="track-title">${t.title}</div>
+              <div class="track-artist">${t.artist}</div>
+            </div>
+          `;
+          item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectTrack(i);
+            play();
+          });
+          playlistEl.appendChild(item);
+        });
+        highlightActive();
+      }
+
+      function highlightActive(){
+        document.querySelectorAll('.track-item').forEach(el => el.classList.remove('active'));
+        const el = document.querySelector(`.track-item[data-index="${currentIndex}"]`);
+        if(el) el.classList.add('active');
+      }
+
+      function loadTrack(index){
+        if (index < 0 || index >= playlist.length) return;
+        currentIndex = index;
+        const t = playlist[index];
+        player.src = t.src;
+        nowTitle.textContent = t.title;
+        nowArtist.textContent = t.artist;
+        highlightActive();
+        playPauseBtn.textContent = '▶';
+        isPlaying = false;
+        progress.value = 0;
+        curTime.textContent = '0:00';
+        durTime.textContent = '0:00';
+        player.load();
+      }
+
+      function play(){ if(!player.src) loadTrack(0); player.play().then(()=>{ isPlaying=true; playPauseBtn.textContent='❚❚'; }).catch(e=>console.warn(e)); }
+      function pause(){ player.pause(); isPlaying=false; playPauseBtn.textContent='▶'; }
+
+      function playNext(){
+        if(isShuffle){
+          const idx = (shuffledOrder.indexOf(currentIndex) + 1) % shuffledOrder.length;
+          currentIndex = shuffledOrder[idx];
+        } else {
+          currentIndex = (currentIndex + 1) % playlist.length;
+        }
+        loadTrack(currentIndex); play();
+      }
+      function playPrev(){
+        if(isShuffle){
+          const idx = (shuffledOrder.indexOf(currentIndex) - 1 + shuffledOrder.length) % shuffledOrder.length;
+          currentIndex = shuffledOrder[idx];
+        } else {
+          currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+        }
+        loadTrack(currentIndex); play();
+      }
+
+      loopBtn.addEventListener('click', () => {
+        isLoop = !isLoop;
+        player.loop = isLoop;
+        loopBtn.textContent = `Loop: ${isLoop ? 'On' : 'Off'}`;
+      });
+      shuffleBtn.addEventListener('click', () => {
+        isShuffle = !isShuffle;
+        shuffleBtn.textContent = `Shuffle: ${isShuffle ? 'On' : 'Off'}`;
+        if(isShuffle){
+          shuffledOrder = [...Array(playlist.length).keys()];
+          for(let i = shuffledOrder.length-1; i>0; i--){
+            const j = Math.floor(Math.random()*(i+1));
+            [shuffledOrder[i], shuffledOrder[j]] = [shuffledOrder[j], shuffledOrder[i]];
+          }
+        } else {
+          shuffledOrder = [...Array(playlist.length).keys()];
+        }
+      });
+
+      player.addEventListener('loadedmetadata', () => {
+        const d = player.duration || 0;
+        durTime.textContent = formatTime(d);
+        progress.max = Math.floor(d);
+      });
+
+      player.addEventListener('timeupdate', () => {
+        const cur = Math.floor(player.currentTime || 0);
+        curTime.textContent = formatTime(cur);
+        progress.value = cur;
+      });
+
+      progress.addEventListener('input', (e) => {
+        const val = Number(e.target.value);
+        player.currentTime = val;
+      });
+
+      player.addEventListener('ended', () => {
+        if(player.loop) return;
+        playNext();
+      });
+
+      // play/pause/prev/next
+      playPauseBtn.addEventListener('click', () => { if(isPlaying) pause(); else play(); });
+      prevBtn.addEventListener('click', (e) => { e.stopPropagation(); playPrev(); });
+      nextBtn.addEventListener('click', (e) => { e.stopPropagation(); playNext(); });
+
+      function selectTrack(i){ loadTrack(i); }
+      function formatTime(sec){ sec = Math.floor(sec||0); const m = Math.floor(sec/60); const s = sec%60; return `${m}:${s.toString().padStart(2,'0')}`; }
+
+      document.addEventListener('keydown', (e) => {
+        if(e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+          e.preventDefault();
+          if(isPlaying) pause(); else play();
+        }
+      });
+
+      // ===== volume handling =====
+      volumeEl.addEventListener('input', (e) => {
+        const v = Number(e.target.value) / 100;
+        player.volume = v;
+        if(player.muted && v > 0) player.muted = false;
+        updateMuteIcon();
+      });
+
+      muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if(player.muted){
+          player.muted = false;
+          // restore volume slider to lastVolume (if slider at 0, set to lastVolume)
+          if(Number(volumeEl.value) === 0){
+            volumeEl.value = Math.round(lastVolume * 100);
+            player.volume = lastVolume;
+          }
+        } else {
+          player.muted = true;
+          lastVolume = Number(volumeEl.value) / 100;
+        }
+        updateMuteIcon();
+      });
+
+      function updateMuteIcon(){
+        if(player.muted || player.volume === 0){
+          muteBtn.textContent = '🔇';
+          muteBtn.title = 'Muted';
+        } else if(player.volume <= 0.4){
+          muteBtn.textContent = '🔈';
+          muteBtn.title = 'Low volume';
+        } else if(player.volume <= 0.75){
+          muteBtn.textContent = '🔉';
+          muteBtn.title = 'Medium volume';
+        } else {
+          muteBtn.textContent = '🔊';
+          muteBtn.title = 'Loud';
+        }
+      }
+
+      // initialize
+      renderPlaylist();
+      if(playlist.length) loadTrack(0);
+      // set initial vol UI
+      volumeEl.value = Math.round(player.volume * 100);
+      updateMuteIcon();
+    </script>
+  </section>
+  <!-- ====== END MUSIC SECTION ====== -->
+
+  <section id="pelukan" class="py-5 text-center">
+    <div class="container">
+        <h4 class="mb-3 dancing" style="color:var(--accent-contrast)">Aku Butuh Pelukan!</h4>
+        <div class="card-rose p-4 d-inline-block">
+            <p class="muted-small mb-3">Klik tombol ini berkali-kali — tapi jangan keseringan ya, aku bisa malu!</p>
+            <button class="btn btn-warning btn-lg" id="hugBtn">Peluk Aku! 🤗</button>
+            <div id="hugMsg" class="mt-3" style="min-height:20px;"></div>
+        </div>
+    </div>
+</section>
+
+  <div class="floating-heart" id="floatingHeart" title="Klik untuk beri hadiah kecil">
+    <div class="dancing">♡</div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <small style="color:var(--muted)">Made with ♥ — Khusus untuk kesayanganku Tasya Nurmaliya.</small>
+    </div>
+  </footer>
+
+  <!-- IMAGE MODAL -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body p-0">
+          <img id="modalImage" src="" class="img-fluid rounded" alt="Kenangan Kita" style="width:100%;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // -------------------------------------------------------------------
+    // JAVASCRIPT PRIBADI DAN INTERAKTIVITAS (fix proposal + flip-card safety)
+    // -------------------------------------------------------------------
+
+    // 1) Hug button
+    const hugBtn = document.getElementById('hugBtn');
+    const hugMsg = document.getElementById('hugMsg');
+    let hugCount = 0;
+    hugBtn.addEventListener('click', () => {
+        hugCount++;
+        let msg = '';
+    
+        if (hugCount === 1) {
+            msg = 'Masih malu-malu, klik lagi dong! 😉';
+        } else if (hugCount === 2) {
+            msg = 'Duh, kok jadi grogi ya... 😳';
+        } else if (hugCount === 3) {
+            msg = 'Oke, ini pelukan terbaik dari kode ini! ❤️';
+            hugBtn.classList.remove('btn-warning');
+            hugBtn.classList.add('btn-success');
+            hugBtn.disabled = true;
+            littleHeartsBurst(); 
+        } else {
+            return;
+        }
+
+        hugMsg.textContent = msg;
+        hugBtn.animate([{ transform: 'scale(1)' }, { transform: 'scale(0.95)' }, { transform: 'scale(1.05)' }, { transform: 'scale(1)' }], { duration: 300 });
+    });
+
+    // 2) Login overlay (unchanged)
+    const KEYWORD = "matcha"; // case-insensitive
+    const overlay = document.getElementById('loginOverlay');
+    const pwInput = document.getElementById('passwordInput');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginMsg = document.getElementById('loginMsg');
+
+    function showMessage(text, color='red') {
+      loginMsg.style.color = color;
+      loginMsg.textContent = text;
+    }
+
+    loginBtn.addEventListener('click', () => {
+      const value = (pwInput.value || "").trim().toLowerCase();
+      if(!value){
+        showMessage('Isi kata panggilan dulu ya 💕');
+        return;
+      }
+      if(value === KEYWORD){
+        overlay.style.transition = 'opacity .5s ease, visibility .5s ease';
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+        celebrate();
+      } else {
+        showMessage('Hmm, itu belum tepat — coba ingat lagi panggilan manismu 🥺');
+        overlay.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)'}], { duration: 420 });
+      }
+    });
+    pwInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') loginBtn.click(); });
+
+    // 3) Days counter
+    function calculateDays() {
+      const start = new Date(2024, 8, 1);
+      const today = new Date();
+      if (start.getFullYear() < 2000) {
+         document.getElementById('daysTogether').textContent = '—';
+         return;
+      }
+      const diffTime = Math.abs(today - start);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      document.getElementById('daysTogether').textContent = diffDays;
+    }
+    document.addEventListener('DOMContentLoaded', calculateDays);
+
+    // 4) Proposal reveal — FIXED: stopPropagation + class toggle + close button + prevent flip reactions
+    const openProposalBtn = document.getElementById('openProposalBtn');
+    const proposalContentEl = document.getElementById('proposalContent');
+    const closeProposalBtn = document.getElementById('closeProposalBtn');
+    let proposalOpen = false;
+
+    function openProposal(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      // hide open button
+      openProposalBtn.style.display = 'none';
+      // remove any flipped cards (optional - keeps UI consistent)
+      document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('show-back'));
+      // show proposal content smoothly
+      proposalContentEl.classList.add('show');
+      proposalOpen = true;
+      // focus accessibility
+      const focusTarget = document.getElementById('acceptBtn') || proposalContentEl;
+      focusTarget.setAttribute('tabindex', '-1');
+      focusTarget.focus({ preventScroll: true });
+      // ensure clicks inside proposal don't bubble to parents
+      proposalContentEl.addEventListener('click', stopPropagationOnce, { passive: true });
+    }
+    function closeProposal(e) {
+      if (e) { e.stopPropagation(); e.preventDefault(); }
+      openProposalBtn.style.display = '';
+      proposalContentEl.classList.remove('show');
+      proposalOpen = false;
+      // remove the click stopper
+      proposalContentEl.removeEventListener('click', stopPropagationOnce);
+      // return focus to open button (accessibility)
+      openProposalBtn.focus({ preventScroll: true });
+    }
+    function stopPropagationOnce(ev) { ev.stopPropagation(); }
+
+    openProposalBtn.addEventListener('click', openProposal);
+    closeProposalBtn.addEventListener('click', closeProposal);
+
+    // Keep accept/maybe behavior as before, but ensure they don't trigger flips
+    const acceptBtn = document.getElementById('acceptBtn');
+    const maybeBtn = document.getElementById('maybeBtn');
+    const resp = document.getElementById('respMsg');
+
+    acceptBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      resp.style.color = '#0f5132';
+      resp.textContent = 'Yayy! Terima kasih sudah mau menjadi satu-satunya. Kita menuju petualangan selanjutnya! 🥂';
+      maybeBtn.disabled = true;
+      acceptBtn.disabled = true;
+      littleHeartsBurst();
+    });
+    maybeBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      resp.style.color = '#6b6b6b';
+      resp.textContent = 'Aku paham — terima kasih sudah jujur. Aku sabar menunggu. Semoga kita bisa segera... 🌱';
+      acceptBtn.disabled = true;
+      maybeBtn.disabled = true;
+    });
+
+    // Also prevent flip-cards from toggling when proposal is open
+    function safeToggleCard(card) {
+      if (proposalOpen) return; // ignore toggles while proposal is open
+      card.classList.toggle('show-back');
+      card.setAttribute('aria-pressed', card.classList.contains('show-back'));
+    }
+
+    // 5) Galeri modal
+    document.querySelectorAll('.img-thumb').forEach(img => {
+        img.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const src = this.getAttribute('src');
+            document.getElementById('modalImage').setAttribute('src', src);
+            const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+            imageModal.show();
+        });
+    });
+
+    // Floating heart
+    document.getElementById('floatingHeart').addEventListener('click', () => {
+      alert('Kau memberi hatiku hadiah kecil 💝');
+    });
+
+    /* little hearts helpers */
+    function littleHeartsBurst(){
+      for(let i=0;i<12;i++){
+        createHeart(12 + Math.random()*40, 0.6 + Math.random()*0.8);
+      }
+    }
+    function createHeart(distance, scale){
+      const el = document.createElement('div');
+      el.textContent = '❤';
+      el.style.position = 'fixed';
+      el.style.left = (window.innerWidth/2 + (Math.random()-0.5)*180) + 'px';
+      el.style.top = (window.innerHeight/2 + 20 + (Math.random()-0.8)*60) + 'px';
+      el.style.fontSize = (12 + Math.random()*18)+'px';
+      el.style.opacity = '0.95';
+      el.style.transform = `scale(${scale})`;
+      el.style.pointerEvents = 'none';
+      el.style.zIndex = 9999;
+      document.body.appendChild(el);
+      const dx = (Math.random()-0.5)*distance;
+      const dy = - (80 + Math.random()*180);
+      el.animate([
+        { transform: `translate(0,0) scale(${scale})`, opacity:1 },
+        { transform: `translate(${dx}px, ${dy}px) scale(${scale*0.8})`, opacity:0 }
+      ], { duration: 1400 + Math.random()*600, easing:'cubic-bezier(.2,.8,.2,1)' });
+      setTimeout(()=>el.remove(), 2200);
+    }
+    function celebrate(){
+      for(let i=0;i<18;i++){
+        setTimeout(()=>createHeart(60 + Math.random()*80, 0.6 + Math.random()*1.2), i*60);
+      }
+    }
+
+    // =========================
+    // FLIP CARD (clean + accessible)
+    // =========================
+    const flipCards = document.querySelectorAll('.flip-card');
+
+    flipCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a, button, input, textarea')) return;
+        safeToggleCard(card);
+      });
+
+      card.addEventListener('dblclick', (e) => {
+        if (e.target.closest('a, button, input, textarea')) return;
+        safeToggleCard(card);
+      });
+
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          safeToggleCard(card);
+        } else if (e.key === 'Escape') {
+          if (card.classList.contains('show-back')) {
+            card.classList.remove('show-back');
+            card.setAttribute('aria-pressed', 'false');
+          }
+        }
+      });
+
+      card.addEventListener('focus', () => card.style.boxShadow = '0 14px 30px rgba(46,91,42,0.06)');
+      card.addEventListener('blur', () => card.style.boxShadow = '');
+    });
+
+    // Accessibility: close overlay with Escape key when visible
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (overlay && overlay.style.opacity !== '0') {
+          overlay.style.opacity = '0';
+          overlay.style.visibility = 'hidden';
+        }
+        // also close proposal if open
+        if (proposalOpen) closeProposal();
+      }
+    });
+
+    // OPTIONAL demo placeholders (uncomment if you want placeholders)
+    // document.getElementById('avatar-1').src = 'https://via.placeholder.com/300x300.png?text=You';
+    // document.getElementById('avatar-2').src = 'https://via.placeholder.com/300x300.png?text=Her';
+  </script>
+
+</body>
+</html>
