@@ -90,7 +90,7 @@
       padding:18px;
       box-shadow: 0 8px 20px rgba(46,91,42,0.04);
       border: 1px solid rgba(46,91,42,0.04);
-      overflow: visible; /* penting: jangan memotong proposalContent */
+      overflow: visible;
     }
 
     .profiles-grid { display:flex; gap:18px; align-items:stretch; margin-top:18px; }
@@ -213,19 +213,140 @@
     }
 
     .hidden{display:none !important; visibility:hidden !important; opacity:0 !important;}
+
+    /* HEARTBEAT LINE STYLES */
+    .heartbeat-container {
+      padding: 20px 0;
+      background: linear-gradient(180deg, rgba(254,255,233,0.8), rgba(230,246,214,0.4));
+      border-radius: 20px;
+      margin: 20px 0;
+      box-shadow: 0 8px 25px rgba(46,91,42,0.06);
+    }
+    .profile-circle {
+      text-align: center;
+      flex: 0 0 auto;
+    }
+    .profile-img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      box-shadow: 0 6px 20px rgba(46,91,42,0.15);
+      transition: transform 0.3s ease;
+    }
+    .profile-img:hover {
+      transform: scale(1.08);
+    }
+    .profile-name {
+      font-weight: 600;
+      color: var(--accent-contrast);
+      font-size: 16px;
+    }
+    .heartbeat-line-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 15px;
+    }
+    .heartbeat-svg {
+      width: 100%;
+      height: 80px;
+      overflow: visible;
+    }
+    .pulse-path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: dash 4s linear infinite, pulseGlow 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    @keyframes pulseGlow {
+      from {
+        filter: drop-shadow(0 0 4px #4caf50);
+      }
+      to {
+        filter: drop-shadow(0 0 8px #66bb6a) drop-shadow(0 0 12px #4caf50);
+      }
+    }
+    .heartbeat-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .days-text {
+      font-family: "Dancing Script", cursive;
+      font-size: 28px;
+      color: var(--accent-contrast);
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      animation: textPulse 1.5s ease-in-out infinite alternate;
+    }
+    .date-text {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: -4px;
+    }
+    @keyframes textPulse {
+      from { transform: translate(-50%, -50%) scale(1); }
+      to { transform: translate(-50%, -50%) scale(1.05); }
+    }
+    .pulse-hearts {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 6px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .pulse-heart {
+      font-size: 18px;
+      opacity: 0;
+      animation: heartPop 1.5s ease-in-out infinite;
+    }
+    .pulse-heart:nth-child(1) { animation-delay: 0s; }
+    .pulse-heart:nth-child(2) { animation-delay: 0.3s; }
+    .pulse-heart:nth-child(3) { animation-delay: 0.6s; }
+    @keyframes heartPop {
+      0%, 100% { opacity: 0; transform: translateY(0) scale(0.8); }
+      50% { opacity: 1; transform: translateY(-10px) scale(1.1); }
+    }
+    /* Responsif */
+    @media (max-width: 576px) {
+      .heartbeat-line-wrapper {
+        margin: 15px 0;
+        max-width: 300px;
+      }
+      .profile-img {
+        width: 70px;
+        height: 70px;
+      }
+      .days-text {
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <div id="loginOverlay" class="login-overlay">
     <div class="login-card">
-      <div class="logo-heart">♡</div>
-      <h4 style="margin-bottom:6px;">Halo, sayang 💕</h4>
+      <div class="logo-heart">💚</div>
+      <h4 style="margin-bottom:6px;">Halo, sayang</h4>
       <p class="muted-small">Masukin sesuatu yang paling kita suka — jangan lupa ya :)</p>
 
       <div class="mt-3">
         <div class="input-group mb-2">
-          <span class="input-group-text">🔒</span>
+          <span class="input-group-text">Lock</span>
           <input id="passwordInput" type="password" class="form-control" placeholder="Masukkan panggilan kesayangan">
         </div>
         <div>
@@ -290,15 +411,56 @@
   </section>
 
   <!-- ========================= -->
-  <!-- PROFILES: FLIP CARDS (Edit removed) -->
+  <!-- PROFILES: HEARTBEAT LINE + FLIP CARDS -->
   <!-- ========================= -->
   <section id="profiles" class="py-4">
     <div class="container">
+      <!-- HEARTBEAT LINE WITH DAYS -->
+      <div class="heartbeat-container text-center my-4 position-relative">
+        <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+          <!-- Foto Kiri -->
+          <div class="profile-circle">
+            <img src="foto/ndre.jpg" alt="Andre" class="profile-img">
+            <p class="profile-name mt-2 mb-0">Andre</p>
+          </div>
+
+          <!-- Garis Detak Jantung -->
+          <div class="heartbeat-line-wrapper">
+            <svg class="heartbeat-svg" viewBox="0 0 400 100" preserveAspectRatio="xMidYMid meet">
+              <path d="M 20 50 L 50 50 L 55 48 L 60 45 L 65 52 L 70 70 L 75 45 L 80 48 L 85 50 L 315 50 L 320 52 L 325 48 L 330 50 L 335 52 L 340 48 L 345 50 L 380 50"
+                    fill="none" stroke="#b4dc87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="pulse-path" d="M 20 50 L 50 50 L 55 48 L 60 45 L 65 52 L 70 70 L 75 45 L 80 48 L 85 50 L 315 50 L 320 52 L 325 48 L 330 50 L 335 52 L 340 48 L 345 50 L 380 50"
+                    fill="none" stroke="#4caf50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                    style="filter: drop-shadow(0 0 4px #4caf50);"/>
+            </svg>
+
+            <!-- Teks Days & Tanggal -->
+            <div class="heartbeat-text">
+              <div class="days-text">This is Our Lovely days</div>
+              <div class="date-text">17 November 2025</div>
+            </div>
+
+            <!-- Hati Kecil Berdenyut -->
+            <div class="pulse-hearts">
+              <span class="pulse-heart">💚</span>
+              <span class="pulse-heart">💚</span>
+              <span class="pulse-heart">💚</span>
+            </div>
+          </div>
+
+          <!-- Foto Kanan -->
+          <div class="profile-circle">
+            <img src="foto/aca2.png" alt="Caca" class="profile-img">
+            <p class="profile-name mt-2 mb-0">Caca</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flip Cards (di bawah garis detak) -->
       <div class="profiles-grid">
         <!-- PROFILE 1 -->
         <div class="flip-card" id="flip-1" tabindex="0" role="button" aria-pressed="false" aria-label="Profil saya, tekan Enter atau klik untuk membalik">
           <div class="flip-card-inner">
-            <!-- front -->
             <div class="flip-card-face flip-card-front">
               <img id="avatar-1" src="foto/ndre.jpg" alt="Foto Aku" class="profile-avatar" />
               <div style="flex:1;">
@@ -307,8 +469,6 @@
                 <div class="profile-meta" id="meta-1"><small class="text-muted">Kesayangan Aca</small></div>
               </div>
             </div>
-
-            <!-- back -->
             <div class="flip-card-face flip-card-back">
               <div class="back-message" id="back-1">Halo acaaa terimakasih karena udah masuk ke dalam hidupku, bukti dari kamu masuk ke dalam hidupku ya sesimple kamu yang kepo dan membalikkan kartu ini heheh.</div>
             </div>
@@ -318,17 +478,14 @@
         <!-- PROFILE 2 -->
         <div class="flip-card" id="flip-2" tabindex="0" role="button" aria-pressed="false" aria-label="Profil dia, tekan Enter atau klik untuk membalik">
           <div class="flip-card-inner">
-            <!-- front -->
             <div class="flip-card-face flip-card-front">
               <img id="avatar-2" src="foto/aca2.png" alt="Foto Dia" class="profile-avatar" />
               <div style="flex:1;">
                 <h5 class="profile-name" id="name-2">Tasya Nurmaliya</h5>
                 <p class="profile-desc" id="desc-2">Orang yang suka Matcha tapi kenapa jadi suka sama Andre MJ — Matcha • Senyum yang menenangkan • Si Ngambek </p>
-                <div class="profile-meta" id="meta-2"><small class="text-muted">Manusia berharga untuk Andre MJ💫</small></div>
+                <div class="profile-meta" id="meta-2"><small class="text-muted">Manusia berharga untuk Andre MJ</small></div>
               </div>
             </div>
-
-            <!-- back -->
             <div class="flip-card-face flip-card-back">
               <div class="back-message" id="back-2">Ini pesan dari Andre MJ... Acaaa kenapa kamu bisa sesempurna itu buat aku deh? walaupun kamu sering gak percaya diri dan takut kalo aku bakalan pergi, tapi asal kamu tau yaa aku tuh sayang banget sama kamu lohhh, masa iya mau ninggalin kamu tch.</div>
             </div>
@@ -402,8 +559,7 @@
             </p>
 
             <div class="mt-4 text-center">
-              <!-- TOMBOL DIUBAH: sekarang pakai palette matcha -->
-              <button class="btn btn-lg btn-primary" id="openProposalBtn" style="min-width:250px; background: linear-gradient(90deg,var(--accent), var(--accent-2)); border:none;">Buka Pesan Hatiku 💌</button>
+              <button class="btn btn-lg btn-primary" id="openProposalBtn" style="min-width:250px; background: linear-gradient(90deg,var(--accent), var(--accent-2)); border:none;">Buka Pesan Hatiku</button>
             </div>
 
             <div id="proposalContent" class="mt-3" aria-live="polite">
@@ -418,12 +574,12 @@
                 Ya pas di bandung juga aku seneng bisa ngebonceng kamu dari crb sampe bdg dan balik lagi, aku juga seneng banget pas kamu waktu itu ngepangku aku di kasur pas aku belum mandi wkkwkwkw, gatau deh waktu itu aku seneng banget cuma yaaa aku masih nyembunyiin hehwehwhew. dah ah kebanyakan ntar ini isinya hehehe<br><br>
               
                 Sayanggg Aku mau kamu tau kalo aku tuh bener bener serius sama kamu, jangan pernah mikir kalo aku tuh gak serius yaa? jangan pernah mikir kalo aku bakal bosen ato apa yaa? kita kan udah ngomongin itu di awal, kalo aku/kamu bosen kita harus gimana iyakann?? semoga kita bisa selesain masalah entah apapun ituu dan jangan sampe kita pisah karena aku gamau hal hal pahit itu terulang lagi di hidupku, dan kamu juga gamauu kayak gitu kann sayang???.
-                Jadiiii sayangggg Maukah kau **menjadi satu-satunya yang kusayang — bukan hanya hari ini, tapi selalu dan selamanyaaa?? mau kannn? ❤️💚🤍**
+                Jadiiii sayangggg Maukah kau **menjadi satu-satunya yang kusayang — bukan hanya hari ini, tapi selalu dan selamanyaaa?? mau kannn? HeartHeartWhite Heart**
               </p>
 
               <div class="mt-4 d-flex gap-3 justify-content-center">
-                <button class="btn btn-success btn-lg" id="acceptBtn">Ayoo sayangg 💍</button>
-                <button class="btn btn-outline-secondary btn-lg" id="maybeBtn">Beri aku waktu 🙏</button>
+                <button class="btn btn-success btn-lg" id="acceptBtn">Ayoo sayangg Ring</button>
+                <button class="btn btn-outline-secondary btn-lg" id="maybeBtn">Beri aku waktu Praying Hands</button>
               </div>
 
               <div class="mt-3 d-flex justify-content-center gap-2">
@@ -450,7 +606,7 @@
     </div>
   </section>
 
-  <!-- ====== MUSIC SECTION: playlist interaktif (DIUBAH) ====== -->
+  <!-- ====== MUSIC SECTION ====== -->
   <section id="musik" class="py-5">
     <div class="container">
       <h4 class="mb-3">Lagu Kita</h4>
@@ -481,31 +637,28 @@
           .track-artist { color:var(--muted); font-size:13px; }
           @media (max-width:900px) { .player-wrap { flex-direction:column; } .playlist { width:100%; max-width:100%; } }
 
-          /* volume small style */
           .vol-wrap { display:flex; align-items:center; gap:8px; padding-left:6px; }
           #volume { width:110px; accent-color: #2e5b2a; }
           .mute-icon { font-size:14px; }
         </style>
 
         <div class="player-wrap">
-          <!-- main player -->
           <div class="player-main">
             <div class="track-info" id="nowTitle">- Pilih lagu untuk mulai -</div>
             <div class="track-sub" id="nowArtist">Playlist personal</div>
 
             <div class="player-controls mt-3">
-              <button id="prevBtn" class="small-btn" title="Previous">⏮</button>
-              <button id="playPauseBtn" class="play-btn" title="Play / Pause">▶</button>
-              <button id="nextBtn" class="small-btn" title="Next">⏭</button>
+              <button id="prevBtn" class="small-btn" title="Previous">Previous</button>
+              <button id="playPauseBtn" class="play-btn" title="Play / Pause">Play</button>
+              <button id="nextBtn" class="small-btn" title="Next">Next</button>
 
               <div style="flex:1"></div>
 
               <button id="loopBtn" class="small-btn" title="Loop: Off">Loop</button>
               <button id="shuffleBtn" class="small-btn" title="Shuffle: Off">Shuffle</button>
 
-              <!-- volume control -->
               <div class="vol-wrap" style="margin-left:6px;">
-                <button id="muteBtn" class="small-btn" title="Mute">🔊</button>
+                <button id="muteBtn" class="small-btn" title="Mute">Speaker</button>
                 <input id="volume" type="range" min="0" max="100" value="80" aria-label="volume">
               </div>
             </div>
@@ -521,17 +674,14 @@
             </div>
           </div>
 
-          <!-- playlist -->
           <div class="playlist" id="playlist">
             <h6>Playlist</h6>
-            <!-- items injected by JS -->
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      // === Playlist: sesuaikan src bila nama file berbeda di folder 'musik/' ===
       const playlist = [
         { title: "everything u are", artist: "Hindia", src: "musik/everything u are - Hindia.mp3", cover: "foto/everyth.jpg" },
         { title: "Jiwa Yang Bersedih", artist: "Ghea Indrawari", src: "musik/Jiwa Yang Bersedih - Ghea Indrawari.mp3", cover: "foto/jiwayangb.jpg" },
@@ -540,9 +690,7 @@
         { title: "Tarot", artist: ".Feast", src: "musik/Tarot - .Feast.mp3", cover: "foto/tarottw.jpg" },
         { title: "Terima Kasih Sudah Bertahan", artist: "Ghea Indrawari", src: "musik/Terima Kasih Sudah Bertahan - Ghea Indrawari.mp3", cover: "foto/terimakasihku.jpg" }
       ];
-      // ===================================================================
 
-      // DOM refs
       const player = document.getElementById('player');
       const playPauseBtn = document.getElementById('playPauseBtn');
       const prevBtn = document.getElementById('prevBtn');
@@ -555,8 +703,6 @@
       const curTime = document.getElementById('curTime');
       const durTime = document.getElementById('durTime');
       const playlistEl = document.getElementById('playlist');
-
-      // volume refs
       const volumeEl = document.getElementById('volume');
       const muteBtn = document.getElementById('muteBtn');
 
@@ -567,7 +713,6 @@
       let shuffledOrder = [...Array(playlist.length).keys()];
       let lastVolume = Number(volumeEl.value) / 100;
 
-      // set initial volume
       player.volume = lastVolume;
 
       function renderPlaylist(){
@@ -607,7 +752,7 @@
         nowTitle.textContent = t.title;
         nowArtist.textContent = t.artist;
         highlightActive();
-        playPauseBtn.textContent = '▶';
+        playPauseBtn.textContent = 'Pause';
         isPlaying = false;
         progress.value = 0;
         curTime.textContent = '0:00';
@@ -615,8 +760,8 @@
         player.load();
       }
 
-      function play(){ if(!player.src) loadTrack(0); player.play().then(()=>{ isPlaying=true; playPauseBtn.textContent='❚❚'; }).catch(e=>console.warn(e)); }
-      function pause(){ player.pause(); isPlaying=false; playPauseBtn.textContent='▶'; }
+      function play(){ if(!player.src) loadTrack(0); player.play().then(()=>{ isPlaying=true; playPauseBtn.textContent='Pause'; }).catch(e=>console.warn(e)); }
+      function pause(){ player.pause(); isPlaying=false; playPauseBtn.textContent='Play'; }
 
       function playNext(){
         if(isShuffle){
@@ -678,7 +823,6 @@
         playNext();
       });
 
-      // play/pause/prev/next
       playPauseBtn.addEventListener('click', () => { if(isPlaying) pause(); else play(); });
       prevBtn.addEventListener('click', (e) => { e.stopPropagation(); playPrev(); });
       nextBtn.addEventListener('click', (e) => { e.stopPropagation(); playNext(); });
@@ -693,7 +837,6 @@
         }
       });
 
-      // ===== volume handling =====
       volumeEl.addEventListener('input', (e) => {
         const v = Number(e.target.value) / 100;
         player.volume = v;
@@ -705,7 +848,6 @@
         e.stopPropagation();
         if(player.muted){
           player.muted = false;
-          // restore volume slider to lastVolume (if slider at 0, set to lastVolume)
           if(Number(volumeEl.value) === 0){
             volumeEl.value = Math.round(lastVolume * 100);
             player.volume = lastVolume;
@@ -719,52 +861,48 @@
 
       function updateMuteIcon(){
         if(player.muted || player.volume === 0){
-          muteBtn.textContent = '🔇';
+          muteBtn.textContent = 'Muted';
           muteBtn.title = 'Muted';
         } else if(player.volume <= 0.4){
-          muteBtn.textContent = '🔈';
+          muteBtn.textContent = 'Low';
           muteBtn.title = 'Low volume';
         } else if(player.volume <= 0.75){
-          muteBtn.textContent = '🔉';
+          muteBtn.textContent = 'Medium';
           muteBtn.title = 'Medium volume';
         } else {
-          muteBtn.textContent = '🔊';
+          muteBtn.textContent = 'High';
           muteBtn.title = 'Loud';
         }
       }
 
-      // initialize
       renderPlaylist();
       if(playlist.length) loadTrack(0);
-      // set initial vol UI
       volumeEl.value = Math.round(player.volume * 100);
       updateMuteIcon();
     </script>
   </section>
-  <!-- ====== END MUSIC SECTION ====== -->
 
   <section id="pelukan" class="py-5 text-center">
     <div class="container">
-        <h4 class="mb-3 dancing" style="color:var(--accent-contrast)">Aku Butuh Pelukan!</h4>
+        <h4 class="mb-3 dancing" style="color:var(--accent-contrast)">Tombol iseng anggep aja peluk wkkw</h4>
         <div class="card-rose p-4 d-inline-block">
-            <p class="muted-small mb-3">Klik tombol ini berkali-kali — tapi jangan keseringan ya, aku bisa malu!</p>
-            <button class="btn btn-warning btn-lg" id="hugBtn">Peluk Aku! 🤗</button>
+            <p class="muted-small mb-3">Klik tombol ini berkali-kali — tapi jangan keseringan yaaa malu gweh :3</p>
+            <button class="btn btn-warning btn-lg" id="hugBtn">Tombol peluk iseng hehe</button>
             <div id="hugMsg" class="mt-3" style="min-height:20px;"></div>
         </div>
     </div>
 </section>
 
   <div class="floating-heart" id="floatingHeart" title="Klik untuk beri hadiah kecil">
-    <div class="dancing">♡</div>
+    <div class="dancing">💚</div>
   </div>
 
   <footer>
     <div class="container">
-      <small style="color:var(--muted)">Made with ♥ — Khusus untuk kesayanganku Tasya Nurmaliya.</small>
+      <small style="color:var(--muted)">Made with 💚 — Khusus untuk kesayanganku Tasya Nurmaliya.</small>
     </div>
   </footer>
 
-  <!-- IMAGE MODAL -->
   <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -778,24 +916,18 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // -------------------------------------------------------------------
-    // JAVASCRIPT PRIBADI DAN INTERAKTIVITAS (fix proposal + flip-card safety)
-    // -------------------------------------------------------------------
-
-    // 1) Hug button
     const hugBtn = document.getElementById('hugBtn');
     const hugMsg = document.getElementById('hugMsg');
     let hugCount = 0;
     hugBtn.addEventListener('click', () => {
         hugCount++;
         let msg = '';
-    
         if (hugCount === 1) {
-            msg = 'Masih malu-malu, klik lagi dong! 😉';
+            msg = 'Masih malu-malu, klik lagi atuhh';
         } else if (hugCount === 2) {
-            msg = 'Duh, kok jadi grogi ya... 😳';
+            msg = 'Duhaii jadi malu wkwkw';
         } else if (hugCount === 3) {
-            msg = 'Oke, ini pelukan terbaik dari kode ini! ❤️';
+            msg = 'Oke, ini pelukan terbaik dari kamuww! cihuyyy';
             hugBtn.classList.remove('btn-warning');
             hugBtn.classList.add('btn-success');
             hugBtn.disabled = true;
@@ -803,13 +935,11 @@
         } else {
             return;
         }
-
         hugMsg.textContent = msg;
         hugBtn.animate([{ transform: 'scale(1)' }, { transform: 'scale(0.95)' }, { transform: 'scale(1.05)' }, { transform: 'scale(1)' }], { duration: 300 });
     });
 
-    // 2) Login overlay (unchanged)
-    const KEYWORD = "matcha"; // case-insensitive
+    const KEYWORD = "matcha";
     const overlay = document.getElementById('loginOverlay');
     const pwInput = document.getElementById('passwordInput');
     const loginBtn = document.getElementById('loginBtn');
@@ -823,7 +953,7 @@
     loginBtn.addEventListener('click', () => {
       const value = (pwInput.value || "").trim().toLowerCase();
       if(!value){
-        showMessage('Isi kata panggilan dulu ya 💕');
+        showMessage('Isi sesuatu yang disuka dulu ya Sayangg');
         return;
       }
       if(value === KEYWORD){
@@ -832,15 +962,14 @@
         overlay.style.visibility = 'hidden';
         celebrate();
       } else {
-        showMessage('Hmm, itu belum tepat — coba ingat lagi panggilan manismu 🥺');
+        showMessage('Hmm, itu belum tepat — coba lagi lahh masa lupaa');
         overlay.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)'}], { duration: 420 });
       }
     });
     pwInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') loginBtn.click(); });
 
-    // 3) Days counter
     function calculateDays() {
-      const start = new Date(2024, 8, 1);
+      const start = new Date(2025, 6, 29);
       const today = new Date();
       if (start.getFullYear() < 2000) {
          document.getElementById('daysTogether').textContent = '—';
@@ -852,7 +981,6 @@
     }
     document.addEventListener('DOMContentLoaded', calculateDays);
 
-    // 4) Proposal reveal — FIXED: stopPropagation + class toggle + close button + prevent flip reactions
     const openProposalBtn = document.getElementById('openProposalBtn');
     const proposalContentEl = document.getElementById('proposalContent');
     const closeProposalBtn = document.getElementById('closeProposalBtn');
@@ -861,18 +989,13 @@
     function openProposal(e) {
       e.stopPropagation();
       e.preventDefault();
-      // hide open button
       openProposalBtn.style.display = 'none';
-      // remove any flipped cards (optional - keeps UI consistent)
       document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('show-back'));
-      // show proposal content smoothly
       proposalContentEl.classList.add('show');
       proposalOpen = true;
-      // focus accessibility
       const focusTarget = document.getElementById('acceptBtn') || proposalContentEl;
       focusTarget.setAttribute('tabindex', '-1');
       focusTarget.focus({ preventScroll: true });
-      // ensure clicks inside proposal don't bubble to parents
       proposalContentEl.addEventListener('click', stopPropagationOnce, { passive: true });
     }
     function closeProposal(e) {
@@ -880,9 +1003,7 @@
       openProposalBtn.style.display = '';
       proposalContentEl.classList.remove('show');
       proposalOpen = false;
-      // remove the click stopper
       proposalContentEl.removeEventListener('click', stopPropagationOnce);
-      // return focus to open button (accessibility)
       openProposalBtn.focus({ preventScroll: true });
     }
     function stopPropagationOnce(ev) { ev.stopPropagation(); }
@@ -890,7 +1011,6 @@
     openProposalBtn.addEventListener('click', openProposal);
     closeProposalBtn.addEventListener('click', closeProposal);
 
-    // Keep accept/maybe behavior as before, but ensure they don't trigger flips
     const acceptBtn = document.getElementById('acceptBtn');
     const maybeBtn = document.getElementById('maybeBtn');
     const resp = document.getElementById('respMsg');
@@ -898,7 +1018,7 @@
     acceptBtn.addEventListener('click', (ev) => {
       ev.stopPropagation();
       resp.style.color = '#0f5132';
-      resp.textContent = 'Yayy! Terima kasih sudah mau menjadi satu-satunya. Kita menuju petualangan selanjutnya! 🥂';
+      resp.textContent = 'Hehehe, Makasih sayanggg karena sudah ingin selalu bersamakuuu cihuyy :3';
       maybeBtn.disabled = true;
       acceptBtn.disabled = true;
       littleHeartsBurst();
@@ -906,19 +1026,17 @@
     maybeBtn.addEventListener('click', (ev) => {
       ev.stopPropagation();
       resp.style.color = '#6b6b6b';
-      resp.textContent = 'Aku paham — terima kasih sudah jujur. Aku sabar menunggu. Semoga kita bisa segera... 🌱';
+      resp.textContent = 'Baiklahh...';
       acceptBtn.disabled = true;
       maybeBtn.disabled = true;
     });
 
-    // Also prevent flip-cards from toggling when proposal is open
     function safeToggleCard(card) {
-      if (proposalOpen) return; // ignore toggles while proposal is open
+      if (proposalOpen) return;
       card.classList.toggle('show-back');
       card.setAttribute('aria-pressed', card.classList.contains('show-back'));
     }
 
-    // 5) Galeri modal
     document.querySelectorAll('.img-thumb').forEach(img => {
         img.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -929,12 +1047,10 @@
         });
     });
 
-    // Floating heart
     document.getElementById('floatingHeart').addEventListener('click', () => {
-      alert('Kau memberi hatiku hadiah kecil 💝');
+      alert('Kau memberi hatiku hadiah kecil Gift');
     });
 
-    /* little hearts helpers */
     function littleHeartsBurst(){
       for(let i=0;i<12;i++){
         createHeart(12 + Math.random()*40, 0.6 + Math.random()*0.8);
@@ -942,7 +1058,7 @@
     }
     function createHeart(distance, scale){
       const el = document.createElement('div');
-      el.textContent = '❤';
+      el.textContent = '💚';
       el.style.position = 'fixed';
       el.style.left = (window.innerWidth/2 + (Math.random()-0.5)*180) + 'px';
       el.style.top = (window.innerHeight/2 + 20 + (Math.random()-0.8)*60) + 'px';
@@ -966,22 +1082,16 @@
       }
     }
 
-    // =========================
-    // FLIP CARD (clean + accessible)
-    // =========================
     const flipCards = document.querySelectorAll('.flip-card');
-
     flipCards.forEach(card => {
       card.addEventListener('click', (e) => {
         if (e.target.closest('a, button, input, textarea')) return;
         safeToggleCard(card);
       });
-
       card.addEventListener('dblclick', (e) => {
         if (e.target.closest('a, button, input, textarea')) return;
         safeToggleCard(card);
       });
-
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -993,26 +1103,19 @@
           }
         }
       });
-
       card.addEventListener('focus', () => card.style.boxShadow = '0 14px 30px rgba(46,91,42,0.06)');
       card.addEventListener('blur', () => card.style.boxShadow = '');
     });
 
-    // Accessibility: close overlay with Escape key when visible
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         if (overlay && overlay.style.opacity !== '0') {
           overlay.style.opacity = '0';
           overlay.style.visibility = 'hidden';
         }
-        // also close proposal if open
         if (proposalOpen) closeProposal();
       }
     });
-
-    // OPTIONAL demo placeholders (uncomment if you want placeholders)
-    // document.getElementById('avatar-1').src = 'https://via.placeholder.com/300x300.png?text=You';
-    // document.getElementById('avatar-2').src = 'https://via.placeholder.com/300x300.png?text=Her';
   </script>
 
 </body>
